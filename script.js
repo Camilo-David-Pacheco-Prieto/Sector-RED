@@ -68,6 +68,15 @@ const TERMINAL_LABELS = ['CALIDAD', 'PERTINENCIA', 'USABILIDAD'];
 const TERMINAL_COLORS = [COLORS.green, COLORS.purple, COLORS.cyan];
 const TERMINAL_COLORS_RGBA = ['rgba(0,255,136,', 'rgba(123,47,252,', 'rgba(0,240,255,'];
 
+const BUZZ_PHRASES = [
+  '¡Al infinito... y más allá!',
+  'Esto no es volar, esto es caer con estilo.',
+  'Ranger Espacial Buzz Lightyear, reportándose.',
+  'Misión cumplida.',
+  'Al infinito... ¡y más allá!',
+  '¡Hasta el infinito y más allá!'
+];
+
 // ============================================================================
 // MOTOR DE AUDIO (Web Audio API)
 // ============================================================================
@@ -914,6 +923,13 @@ function showScreen(id) {
     createSpaceship();
     showShip();
     document.getElementById('highScoreDisplay').textContent = String(highScore).padStart(4, '0');
+
+    // Frase aleatoria de Buzz en el briefing
+    const hint = document.querySelector('.briefing .hint');
+    if (hint) {
+      const phrase = BUZZ_PHRASES[Math.floor(Math.random() * BUZZ_PHRASES.length)];
+      hint.innerHTML = `<span class="hint-dash">—</span> "${phrase}" <span class="hint-dash">—</span>`;
+    }
   } else {
     hideShip();
   }
@@ -1350,6 +1366,12 @@ function victory() {
   gsap.fromTo(scons,
     { opacity: 0 },
     { opacity: 1, duration: mDur(0.5), stagger: reduceMotion() ? 0 : 0.08, ease: 'power2.out', delay: 0.1 }
+  );
+
+  // Frase de Buzz con fade-in
+  gsap.fromTo('#buzzVictory',
+    { opacity: 0, y: 10 },
+    { opacity: 0.5, y: 0, duration: mDur(1), delay: 1.2, ease: 'power2.out' }
   );
 
   // Efecto de brillo dorado PixiJS

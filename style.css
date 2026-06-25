@@ -183,6 +183,17 @@ html, body {
   animation:goldGlow 1.5s ease-in-out infinite alternate;
 }
 
+.buzz-victory {
+  font-family:var(--font-pixel);
+  font-size:clamp(0.4rem,1vw,0.6rem);
+  color:var(--gold);
+  letter-spacing:0.15em;
+  text-align:center;
+  margin-bottom:1rem;
+  opacity:0.5;
+  text-shadow:0 0 8px rgba(255,215,0,0.2);
+}
+
 /* --- Blink prompt en game over --- */
 .go-prompt {
   font-family:var(--font-pixel);
@@ -300,6 +311,18 @@ html, body {
   text-align:center;
   margin-bottom:1.5rem;
   opacity:0.7;
+}
+
+.buzz-line {
+  font-family:var(--font-pixel);
+  font-size:clamp(0.35rem,0.9vw,0.55rem);
+  color:var(--cyan);
+  letter-spacing:0.25em;
+  text-align:center;
+  margin-top:-0.8rem;
+  margin-bottom:1.2rem;
+  opacity:0.25;
+  text-shadow:0 0 10px rgba(0,240,255,0.15);
 }
 
 /* --- BRIEFING PANEL --- */
