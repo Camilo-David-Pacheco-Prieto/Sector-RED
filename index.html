@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
+  <title>SECTOR RED — Carga de Datos</title>
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-container"></div>
+
+  <!-- LOADING OVERLAY -->
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-content">
+      <div class="loading-text">CARGANDO</div>
+      <div class="loading-dots"><span>.</span><span>.</span><span>.</span></div>
+    </div>
+  </div>
+
+  <!-- CRT SCANLINE OVERLAY -->
+  <div id="crtOverlay" class="crt-overlay" aria-hidden="true"></div>
+
+  <!-- ESQUINAS DE GABINETE -->
+  <div class="cabinet-corner tl" aria-hidden="true"></div>
+  <div class="cabinet-corner tr" aria-hidden="true"></div>
+  <div class="cabinet-corner bl" aria-hidden="true"></div>
+  <div class="cabinet-corner br" aria-hidden="true"></div>
+
+  <!-- PANTALLA DE INICIO -->
+  <div id="startScreen" class="screen">
+    <!-- Créditos -->
+    <div class="arcade-credits">
+      <span class="ac-label">CRÉDITOS</span>
+      <span class="ac-value">01</span>
+    </div>
+
+    <!-- High Score -->
+    <div class="arcade-hiscore">
+      <span class="hs-label">HIGH SCORE</span>
+      <span class="hs-value" id="highScoreDisplay">0000</span>
+    </div>
+
+    <!-- Título -->
+    <div class="title-area">
+      <div class="title-deco left" aria-hidden="true"><span>═</span><span>═</span><span>═</span><span>═</span></div>
+      <h1 class="main-title">SECTOR RED</h1>
+      <div class="title-deco right" aria-hidden="true"><span>═</span><span>═</span><span>═</span><span>═</span></div>
+    </div>
+
+    <p class="subtitle">SISTEMA DE ENRUTAMIENTO DE DATOS</p>
+
+    <div class="briefing arcade-panel">
+      <div class="bp-header">═══ TRANSMISIÓN ENTRANTE ═══</div>
+      <p>Paquetes de datos sobre <strong>Recursos Educativos Digitales</strong>
+      están entrando al sector. Enruta cada paquete al terminal correcto según
+      el criterio de evaluación que corresponda:</p>
+      <div class="legend">
+        <span class="legend-item" style="color:#00ff88">▣ CALIDAD</span>
+        <span class="legend-item" style="color:#7b2ffc">▣ PERTINENCIA</span>
+        <span class="legend-item" style="color:#00f0ff">▣ USABILIDAD</span>
+      </div>
+      <p class="hint">♥ ♥ ♥  <span class="hint-dash">—</span>  3 VIDAS DISPONIBLES</p>
+    </div>
+
+    <div class="diff-section">
+      <div class="diff-label-row">
+        <span class="diff-arrow">▶</span>
+        <span class="diff-label-text">SELECCIONAR VELOCIDAD</span>
+        <span class="diff-arrow">◀</span>
+      </div>
+      <div class="diff-buttons">
+        <button class="diff-btn" data-diff="easy">
+          <span class="diff-indicator"></span>
+          <span class="diff-name">FÁCIL</span>
+          <span class="diff-time">15s</span>
+        </button>
+        <button class="diff-btn active" data-diff="normal">
+          <span class="diff-indicator lit"></span>
+          <span class="diff-name">NORMAL</span>
+          <span class="diff-time">10s</span>
+        </button>
+        <button class="diff-btn" data-diff="hard">
+          <span class="diff-indicator"></span>
+          <span class="diff-name">DIFÍCIL</span>
+          <span class="diff-time">6s</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="start-area">
+      <button id="startBtn" class="btn-primary arcade-btn">
+        <span class="btn-inner">INICIAR CARGA</span>
+      </button>
+      <p class="press-start" id="pressStartText">— PRESIONA SPACE / ENTER —</p>
+    </div>
+
+    <div class="arcade-footer">
+      <span class="af-left">⏣ SECTOR RED v2.0</span>
+      <span class="af-right">⏣ 2025</span>
+    </div>
+  </div>
+
+  <!-- HUD DURANTE EL JUEGO -->
+  <div id="gameHUD" class="hud hidden">
+    <div class="hud-item">
+      <span class="hud-label">VIDAS</span>
+      <span id="livesDisplay" class="hud-value lives">♥ ♥ ♥</span>
+    </div>
+    <div class="hud-item">
+      <span class="hud-label">PUNTAJE</span>
+      <span id="scoreDisplay" class="hud-value score" role="status" aria-live="polite" aria-atomic="true">0</span>
+    </div>
+    <div class="hud-item">
+      <span class="hud-label">COMBO</span>
+      <span id="comboDisplay" class="hud-value combo">x1</span>
+    </div>
+    <div class="hud-item">
+      <span class="hud-label">CARGA</span>
+      <span id="progressDisplay" class="hud-value progress">0/15</span>
+    </div>
+    <div class="hud-item diff-badge-container" id="diffBadgeContainer">
+      <span class="hud-label">MODO</span>
+      <span id="diffBadge" class="hud-value diff-badge">NORMAL</span>
+    </div>
+    <button id="muteBtn" class="mute-btn" title="Silenciar / Activar sonido">🔊</button>
+  </div>
+
+  <!-- PAUSA OVERLAY -->
+  <div id="pauseOverlay" class="pause-overlay hidden">
+    <div class="pause-content">
+      <div class="pause-icon">⏸</div>
+      <h2 class="pause-title">PAUSA</h2>
+      <p class="pause-hint">PRESIONA ESC O P PARA CONTINUAR</p>
+    </div>
+  </div>
+
+  <!-- AFIRMACIÓN Y TEMPORIZADOR -->
+  <div id="statementArea" class="statement-area hidden">
+    <div class="statement-box">
+      <div class="statement-label">⏣ PAQUETE DE DATOS</div>
+      <div class="statement-text" id="statementText" role="status" aria-live="polite" aria-atomic="true"></div>
+    </div>
+    <div class="timer-track">
+      <div class="timer-fill" id="timerFill"></div>
+    </div>
+  </div>
+
+  <!-- PANTALLA GAME OVER -->
+  <div id="gameOverScreen" class="screen" role="alert">
+    <div class="screen-corners" aria-hidden="true">
+      <div class="scon scon-tl"></div><div class="scon scon-tr"></div>
+      <div class="scon scon-bl"></div><div class="scon scon-br"></div>
+    </div>
+    <div class="crt-overlay-screen" aria-hidden="true"></div>
+    <div class="screen-content">
+      <h2 class="fail-title">✗ CARGA CORROMPIDA</h2>
+      <p class="result-text">Los datos no pudieron ser procesados.</p>
+      <div class="score-display">
+        <span class="score-label">PUNTAJE</span>
+        <span id="gameOverScore" class="score-number">0</span>
+      </div>
+      <p class="detail-text" id="gameOverDetail"></p>
+      <button id="retryBtn" class="btn-primary arcade-btn">REINTENTAR</button>
+      <p class="go-prompt">PRESIONA START PARA CONTINUAR</p>
+    </div>
+  </div>
+
+  <!-- PANTALLA VICTORIA -->
+  <div id="victoryScreen" class="screen" role="alert">
+    <div class="screen-corners" aria-hidden="true">
+      <div class="scon scon-tl"></div><div class="scon scon-tr"></div>
+      <div class="scon scon-bl"></div><div class="scon scon-br"></div>
+    </div>
+    <div class="crt-overlay-screen gold-scanlines" aria-hidden="true"></div>
+    <div class="screen-content">
+      <div class="star-badge">✦</div>
+      <h2 class="win-title">CARGA COMPLETADA</h2>
+      <p class="result-text">Todos los datos fueron enrutados exitosamente.</p>
+      <div class="score-display">
+        <span class="score-label">PUNTAJE FINAL</span>
+        <span id="victoryScore" class="score-number">0</span>
+      </div>
+      <p id="victoryDetail" class="detail-text"></p>
+      <button id="completeBtn" class="btn-primary arcade-btn">COMPLETAR MISIÓN</button>
+    </div>
+  </div>
+
+  <!-- CDN LIBRERÍAS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.4.3/pixi.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
